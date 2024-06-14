@@ -13,6 +13,7 @@
   "dependencies": {
     "@nuxt/eslint": "^0.3.13",
     "@pinia/nuxt": "^0.5.1",
+    "firebase": "^10.12.2",
     "nuxt": "^3.12.1",
     "vue": "^3.4.27",
     "vue-router": "^4.3.3"

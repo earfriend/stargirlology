@@ -10,8 +10,6 @@
 useSeoMeta({
   title: 'Stargirlology',
   description: 'The future home of Stargirlology',
-  // image: 'https://stargirlology.com/stargirlology.png',
-  // url: 'https://stargirlology.com'
 })
 </script>
 

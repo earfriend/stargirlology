@@ -21,6 +21,7 @@ jobs:
           npx nuxi generate
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
+          entryPoint: stargirlology-webapp
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STARGIRLOLOGY }}'
           channelId: live

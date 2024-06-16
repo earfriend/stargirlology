@@ -13,7 +13,6 @@
   "dependencies": {
     "@nuxt/eslint": "^0.3.13",
     "@pinia/nuxt": "^0.5.1",
-    "firebase": "^10.12.2",
     "nuxt": "^3.12.1",
     "vue": "^3.4.27",
     "vue-router": "^4.3.3"
@@ -24,6 +23,7 @@
     "@nuxtjs/stylelint-module": "^5.2.0",
     "@nuxtjs/tailwindcss": "^6.12.0",
     "eslint": "^9.4.0",
+    "firebase": "^10.12.2",
     "prettier": "^3.3.2",
     "stylelint": "^16.6.1",
     "vite-plugin-eslint": "^1.8.1"

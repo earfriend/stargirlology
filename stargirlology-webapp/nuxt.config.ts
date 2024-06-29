@@ -13,4 +13,11 @@ export default defineNuxtConfig({
       stylistic: true,
     },
   },
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon' as never, href: '/favicon-sg.ico' },
+      ],
+    },
+  },
 })

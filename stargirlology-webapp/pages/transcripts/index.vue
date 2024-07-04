@@ -9,10 +9,36 @@
 </template>
 
 <script setup lang="ts">
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database';
+
+
 useSeoMeta({
   title: 'Stargirlology',
   description: 'Stargirl Transcripts',
 })
+
+
+useFirebase().clientOnly(() => {
+  const db = getDatabase();
+  const tr = ref(db, '/transcripts/last-login');
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      set(tr, {
+        '1': new Date().toLocaleString(),
+        '2': user.email,
+      });
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
+});
+
 </script>
 
 <style scoped>

@@ -3,11 +3,17 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { getDatabase, connectDatabaseEmulator } from 'firebase/database';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import * as modAuth from 'firebase/auth';
+import * as modDb from 'firebase/database';
+import SGUSer from '~/model/user/SGUser';
 
+type ClientOnlyFunc = (args: { modAuth: typeof modAuth, modDb: typeof modDb }) => void;
+
+let isInitialized = false;
+const fbUser = ref<SGUSer>(SGUSer.newUnInitializedUser());
 
 const setupFirebase = async () => {
   console.log('Setting up Firebase');
-
 
   const firebaseConfig = {
     apiKey: 'AIzaSyCIooYtFaWQ_li4P0WvhNwxb5BXpy5g9W0',
@@ -37,33 +43,51 @@ const setupFirebase = async () => {
   }
 }
 
-export default function() {
-  if (window) {
-    console.log('have window');
-    if (window.navigator) {
-      console.log('have navigator');
-      if (window.navigator.userAgent) {
-        console.log('have userAgent');
-      } else {
-        console.log('no userAgent');
-      }
+const setupUser = (fbUser: Ref<SGUSer>) => {
+  const auth = modAuth.getAuth();
+  const onChange = (user: modAuth.User | null) => {
+    console.log('User state changed', user);
+    if (user) {
+      fbUser.value = new SGUSer({
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || '',
+        photoURL: user.photoURL || '',
+      });
+      // ...
     } else {
-      console.log('no navigator');
+      fbUser.value = SGUSer.newGuestUser();
     }
-  } else {
-    console.log('no window');
   }
+  modAuth.onAuthStateChanged(auth, onChange);
+  modAuth.onIdTokenChanged(auth, onChange);
+}
 
-  const clientOnly = (func: VoidFunction) => {
+
+export default function() {
+  /** Run when this code is run in the browser */
+  const inClient = (func: ClientOnlyFunc) => {
     if (!window) return;
+    func({ modAuth, modDb });
+  };
+
+  /** Run when this code is run during generation */
+  const outOfClient = (func: VoidFunction)=> {
+    if (window) return;
     func();
   };
 
-  clientOnly(() => {
+  inClient(() => {
+    if (isInitialized) return;
+    isInitialized = true;
+
     setupFirebase();
+    setupUser(fbUser);
   });
 
   return {
-    clientOnly,
+    inClient,
+    outOfClient,
+    fbUser,
   };
 }

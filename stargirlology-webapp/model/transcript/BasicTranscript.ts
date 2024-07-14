@@ -2,6 +2,7 @@ import type { TimeInfo, TimeInfoCreated } from '../TimeInfo';
 
 interface EditorInfo extends TimeInfoCreated {
   userId: string;
+  displayName: string;
 }
 
 interface BasicTranscriptRow extends TimeInfo {
@@ -16,13 +17,17 @@ interface BasicTranscriptRow extends TimeInfo {
   editors: Array<EditorInfo>;
 }
 
-interface BasicTranscript extends TimeInfo {
+interface BasicTranscriptListItme {
   editors: Array<EditorInfo>;
   episodeNumber: number;
   episodeTitle: string;
+}
+
+
+interface BasicTranscript extends TimeInfo, BasicTranscriptListItme {
   speaker1: string;
   speaker2: string;
   rows: Array<BasicTranscriptRow>;
 }
 
-export type { BasicTranscript, BasicTranscriptRow, EditorInfo };
+export type { BasicTranscript, BasicTranscriptRow, EditorInfo, BasicTranscriptListItme };

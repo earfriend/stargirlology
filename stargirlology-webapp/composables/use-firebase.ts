@@ -6,7 +6,6 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import * as modAuth from 'firebase/auth';
 import * as modDb from 'firebase/database';
 import SGUSer from '~/model/user/SGUser';
-import * as dbPath from '~/model/DbPath';
 import SGUserAcl from '~/model/user/SGUserAcl';
 
 type ClientOnlyFunc = (args: { modAuth: typeof modAuth, modDb: typeof modDb }) => void;
@@ -49,7 +48,7 @@ const setupUser = (fbUser: Ref<SGUSer>) => {
   const auth = modAuth.getAuth();
   const onChange = async (user: modAuth.User | null) => {
     if (user) {
-      const aclRef = modDb.ref(modDb.getDatabase(), dbPath.user(user.uid));
+      const aclRef = modDb.ref(modDb.getDatabase(), DbPath.user(user.uid));
       const snap = await modDb.get(aclRef);
       const acl = new SGUserAcl(snap.val());
 

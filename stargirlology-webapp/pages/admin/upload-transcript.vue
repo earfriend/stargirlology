@@ -53,9 +53,8 @@
 
 <script setup lang="ts">
 import papa from 'papaparse';
-import { transcriptBasic } from '~/model/DbPath';
 import type { TimeInfo } from '~/model/TimeInfo';
-import type { BasicTranscript, EditorInfo } from '~/model/transcript/BasicTranscript';
+import type { BasicTranscript, BasicTranscriptListItme, EditorInfo } from '~/model/transcript/BasicTranscript';
 
 const fb = useFirebase();
 const user = fb.fbUser;
@@ -101,6 +100,7 @@ const uploadCsv = () => {
 
   const editor: EditorInfo = {
     userId: user.value.uid,
+    displayName: user.value.displayName,
     dateCreated: when.dateCreated,
     prettyDateCreated: when.prettyDateCreated,
   };
@@ -153,8 +153,19 @@ const uploadCsv = () => {
 
       fb.inClient(async ({ modDb }) => {
         const db = modDb.getDatabase();
-        const tr = modDb.ref(db, transcriptBasic(transcript.episodeNumber));
-        await modDb.set(tr, transcript);
+
+        const transcriptListItem: BasicTranscriptListItme = {
+          episodeNumber: epNumber,
+          episodeTitle: episodeTitle.value,
+          editors: [editor],
+        }
+
+        const update = {
+          [DbPath.transcriptBasic(transcript.episodeNumber)]: transcript,
+          [DbPath.transcriptListItem(transcriptListItem.episodeNumber)]: transcriptListItem,
+        };
+        modDb.update(modDb.ref(db), update);
+
       });
 
       console.log(transcript)

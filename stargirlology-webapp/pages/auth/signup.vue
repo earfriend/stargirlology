@@ -77,8 +77,6 @@
 </template>
 
 <script setup lang="ts">
-import * as dbPath from '~/model/DbPath';
-
 const fb = useFirebase();
 
 const email = ref('');
@@ -114,7 +112,7 @@ const signup = () => {
 
     // pre write request validations (must also be checked server side, via database rules)
     const db = modDb.getDatabase();
-    const displayNamesRef = modDb.ref(db, dbPath.displayName(displayNameVal));
+    const displayNamesRef = modDb.ref(db, DbPath.displayName(displayNameVal));
 
     if ((await modDb.get(displayNamesRef)).exists()) {
       console.log('display name exists', (await modDb.get(displayNamesRef)).val());
@@ -140,12 +138,12 @@ const signup = () => {
 
       const baseRef =  modDb.ref(db);
       const update = {
-        [dbPath.usersAclIsApproved(userCredential.user.uid)]: false,
-        [dbPath.usersAclCreatedAt(userCredential.user.uid)]: modDb.serverTimestamp(),
-        [dbPath.usersAclLastLogin(userCredential.user.uid)]: modDb.serverTimestamp(),
-        [dbPath.usersAclDisplayName(userCredential.user.uid)]: displayNameVal,
-        [dbPath.usersAclUserAgent(userCredential.user.uid)]: `${(window.navigator) ? window.navigator.userAgent : 'unknown'}`,
-        [dbPath.displayName(displayNameVal)]: userCredential.user.uid,
+        [DbPath.usersAclIsApproved(userCredential.user.uid)]: false,
+        [DbPath.usersAclCreatedAt(userCredential.user.uid)]: modDb.serverTimestamp(),
+        [DbPath.usersAclLastLogin(userCredential.user.uid)]: modDb.serverTimestamp(),
+        [DbPath.usersAclDisplayName(userCredential.user.uid)]: displayNameVal,
+        [DbPath.usersAclUserAgent(userCredential.user.uid)]: `${(window.navigator) ? window.navigator.userAgent : 'unknown'}`,
+        [DbPath.displayName(displayNameVal)]: userCredential.user.uid,
       };
 
       console.log(update);

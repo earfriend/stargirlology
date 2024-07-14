@@ -5,9 +5,6 @@
       <p>Coming soon!</p>
       <p>Transcripts are AI Generated and are not going to be perfectly accurate.</p>
     </div>
-    <ClientOnly>
-      <pre>{{ JSON.stringify(user, null, 2) }}</pre>
-    </ClientOnly>
   </div>
 </template>
 
@@ -29,6 +26,12 @@ watch(user, (user) => {
   if (user.isGuest()) {
     navigateTo('/auth/login');
   }
+});
+
+fb.inClient(async ({ modDb }) => {
+  const ref = modDb.ref(modDb.getDatabase(), DbPath.transcriptList());
+  const list = (await modDb.get(ref)).val();
+  console.log({ list });
 });
 </script>
 

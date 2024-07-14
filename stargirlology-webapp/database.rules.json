@@ -1,5 +1,4 @@
 {
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
     ".read": false,
     ".write": false,
@@ -45,6 +44,12 @@
         ".read": false,
         ".write": false,
         "transcripts": {
+          ".read": true,
+          "$number": {
+            ".write": "!data.exists() && auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true"
+          }
+        },
+        "transcriptList": {
           ".read": true,
           "$number": {
             ".write": "!data.exists() && auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true"

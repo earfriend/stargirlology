@@ -53,6 +53,7 @@
 
 <script setup lang="ts">
 import papa from 'papaparse';
+import { transcriptBasic } from '~/model/DbPath';
 import type { TimeInfo } from '~/model/TimeInfo';
 import type { BasicTranscript, EditorInfo } from '~/model/transcript/BasicTranscript';
 
@@ -152,7 +153,7 @@ const uploadCsv = () => {
 
       fb.inClient(async ({ modDb }) => {
         const db = modDb.getDatabase();
-        const tr = modDb.ref(db, '/transcripts/' + epNumber + '/basic');
+        const tr = modDb.ref(db, transcriptBasic(transcript.episodeNumber));
         await modDb.set(tr, transcript);
       });
 

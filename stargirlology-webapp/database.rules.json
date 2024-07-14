@@ -3,9 +3,54 @@
   "rules": {
     ".read": false,
     ".write": false,
-    "transcripts": {
-      ".read": true,
-      ".write": "auth != null"
+    "prod": {
+      "users": {
+        "$user_id": {
+          ".read": "auth != null && auth.uid == $user_id",
+          ".write": false,
+          ".indexOn": ".value",
+          "isApproved": {
+            ".write": "auth != null && auth.uid == $user_id && newData.val() == false",
+            ".validate": "newData.isBoolean()"
+          },
+          "displayName": {
+            ".write": "auth != null && auth.uid == $user_id && !data.exists() && !root.child('prod/displayNames/' + newData.val().toLowerCase()).exists()",
+            ".validate": "newData.isString() && newData.val().length <= 32 && newData.val().length >= 3 && newData.val().matches(/^[a-zA-Z0-9]+$/)"
+          },
+          "createdAt": {
+            ".write": "auth != null && auth.uid == $user_id && !data.exists() && newData.val() == now"
+          },
+          "lastLogin": {
+            ".write": "auth != null && auth.uid == $user_id && newData.val() == now"
+          },
+          "userAgent": {
+            ".write": "auth != null && auth.uid == $user_id && newData.val().length < 1024"
+          }
+        }
+      },
+      "displayNames": {
+        ".read": false,
+        ".write": false,
+        "$display_name_lower": {
+          ".read": true,
+          ".write": "!data.exists() && $display_name_lower == auth.token.name.toLowerCase() && newData.val().length <= 32 && newData.val().length >= 3",
+          ".indexOn": ".value",
+          "$user_id": {
+            ".read": false,
+            ".write": "auth != null && !data.exists() && auth.uid == $user_id"
+          }
+        }
+      },
+      "content": {
+        ".read": false,
+        ".write": false,
+        "transcripts": {
+          ".read": true,
+          "$number": {
+            ".write": "!data.exists() && auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true"
+          }
+        }
+      }
     }
   }
 }

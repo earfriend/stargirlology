@@ -1,6 +1,5 @@
 <template>
-  <div>
-    {{  user.isNotGuest()  }} {{  user.displayName }}
+  <div class="content pb-8">
     <NuxtLink to="/admin/upload-transcript">Upload Transcript</NuxtLink>
   </div>
 </template>

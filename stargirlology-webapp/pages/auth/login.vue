@@ -94,16 +94,26 @@ const login = () => {
     throw new Error('This function is not available in the client');
   });
 
-  fb.inClient(({ modAuth }) => {
+  fb.inClient(({ modAuth, modDb }) => {
     const auth = modAuth.getAuth();
     modAuth.signInWithEmailAndPassword(auth, email.value, password.value)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         user.value = {
           email: userCredential.user.email,
           uid: userCredential.user.uid,
           displayName: userCredential.user.displayName,
           photoURL: userCredential.user.photoURL,
         };
+
+        const baseRef =  modDb.ref(db);
+        const update = {
+          [dbPath.usersAclLastLogin(userCredential.user.uid)]: modDb.serverTimestamp(),
+          [dbPath.usersAclUserAgent(userCredential.user.uid)]: `${(window.navigator) ? window.navigator.userAgent : 'unknown'}`,
+        };
+
+        console.log(update);
+        await modDb.update(baseRef, update);
+
         navigateTo('/transcripts');
       })
       .catch((error) => {

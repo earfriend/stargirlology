@@ -53,14 +53,17 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <button
-          :disabled="!email || !password"
-          :class="{
-            'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline': true,
-          }"
-          type="submit">
-          Sign Up
-        </button>
+        <ClientOnly>
+          <button
+            :disabled="!email || !displayName || !password"
+            :class="{
+              'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline': true,
+              'bg-blue-300 hover:bg-blue-300': !email || !displayName || !password,
+            }"
+            type="submit">
+            Sign Up
+          </button>
+        </ClientOnly>
         <a v-if="false" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
           Forgot Password?
         </a>
@@ -74,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+import * as dbPath from '~/model/DbPath';
 
 const fb = useFirebase();
 
@@ -86,24 +90,93 @@ const errorInfo = ref({
 });
 
 const signup = () => {
-  fb.inClient(async ({ modAuth }) => {
+  // you can only signup in the client
+
+  fb.inClient(async ({ modAuth, modDb }) => {
+    errorInfo.value = {
+      errorCode: '',
+      errorMessage: '',
+    };
+
     const auth = modAuth.getAuth();
+    const displayNameVal = displayName.value;
+
+    await auth.signOut();
+
+    // client side validations
+    if (displayNameVal.match(/[^a-zA-Z0-9]/) || displayNameVal.length < 3 || displayNameVal.length > 32) {
+      errorInfo.value = {
+        errorCode: 'user/invalid-display-name',
+        errorMessage: 'Display name must be alphanumeric and greater than 3 characters and less than 32 characters.',
+      };
+      return;
+    }
+
+    // pre write request validations (must also be checked server side, via database rules)
+    const db = modDb.getDatabase();
+    const displayNamesRef = modDb.ref(db, dbPath.displayName(displayNameVal));
+
+    if ((await modDb.get(displayNamesRef)).exists()) {
+      console.log('display name exists', (await modDb.get(displayNamesRef)).val());
+      errorInfo.value = {
+        errorCode: 'user/display-name-exists',
+        errorMessage: 'Display name already exists.',
+      };
+      return;
+    }
+
+    let createdUser = null;
     try {
       const userCredential = await modAuth.createUserWithEmailAndPassword(auth, email.value, password.value)
+      createdUser = userCredential.user;
+
+
       await modAuth.updateProfile(userCredential.user, {
-        displayName: displayName.value,
+        displayName: displayNameVal,
       });
       await userCredential.user.getIdToken(true);
 
-      navigateTo('/transcripts');
+      const db = modDb.getDatabase();
+
+      const baseRef =  modDb.ref(db);
+      const update = {
+        [dbPath.usersAclIsApproved(userCredential.user.uid)]: false,
+        [dbPath.usersAclCreatedAt(userCredential.user.uid)]: modDb.serverTimestamp(),
+        [dbPath.usersAclLastLogin(userCredential.user.uid)]: modDb.serverTimestamp(),
+        [dbPath.usersAclDisplayName(userCredential.user.uid)]: displayNameVal,
+        [dbPath.usersAclUserAgent(userCredential.user.uid)]: `${(window.navigator) ? window.navigator.userAgent : 'unknown'}`,
+        [dbPath.displayName(displayNameVal)]: userCredential.user.uid,
+      };
+
+      console.log(update);
+      await modDb.update(baseRef, update);
+
+      await userCredential.user.getIdToken(true);
+
+      setTimeout(() => {
+        navigateTo('/transcripts');
+      }, 100);
+
     } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-      console.log({ error });
+      let innerErr = error;
+      console.error({ innerErr });
+
+      try {
+        if (createdUser) {
+          await modAuth.deleteUser(createdUser);
+        }
+      } catch (error2: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+        innerErr = error2;
+        console.error({ innerErr });
+      }
+
       errorInfo.value = {
-        errorCode: error.code,
-        errorMessage: error.message,
+        errorCode: innerErr.code || 'unknown',
+        errorMessage: innerErr.message || 'unknown',
       };
     }
   })
+
 }
 
 </script>

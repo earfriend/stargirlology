@@ -1,6 +1,6 @@
 <template>
   <div class="content flex flex-col items-center w-full">
-    <div class="">
+    <div>
       <h1>Transcripts</h1>
       <p>Coming soon!</p>
       <p>Transcripts are AI Generated and are not going to be perfectly accurate.</p>

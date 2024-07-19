@@ -6,7 +6,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
     '@nuxt/eslint',
-    '@element-plus/nuxt',
 
     // '@nuxtjs/stylelint-module',
   ],

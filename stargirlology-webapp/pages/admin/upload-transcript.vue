@@ -1,6 +1,9 @@
 <template>
 
   <div class="w-full max-w-xs container pt-8">
+    <ClientOnly>
+      <div v-if="!user.acl.isApproved || user.isGuest()">You are note approved to upload Transcripts</div>
+    </ClientOnly>
     <form
       class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 "
       enctype="multipart/form-data"
@@ -144,7 +147,7 @@ const uploadCsv = () => {
           index,
           editors: [editor],
         };
-        console.log(newRow);
+        //console.log(newRow);
         index += indexStep;
         uuid += 1;
         originalUuid = uuid;

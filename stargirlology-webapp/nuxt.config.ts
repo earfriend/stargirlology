@@ -14,13 +14,11 @@ export default defineNuxtConfig({
       stylistic: true,
     },
   },
-  elementPlus: {
-    importStyle: 'scss',
-  },
   app: {
     head: {
       link: [
         { rel: 'icon', type: 'image/x-icon' as never, href: '/favicon-sg.ico' },
+        { rel: 'stylesheet', href:'https://rsms.me/inter/inter.css' },
       ],
     },
   },

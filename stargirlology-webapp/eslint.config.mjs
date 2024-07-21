@@ -18,5 +18,7 @@ export default createConfigForNuxt({
     }],
     '@stylistic/quotes': ['error', 'single'],
     '@stylistic/block-spacing': ['error', 'always'],
+    '@stylistic/semi': ['error', 'always'],
+    'vue/html-self-closing': ['off'],
   }
 });

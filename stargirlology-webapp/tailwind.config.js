@@ -3,5 +3,10 @@ module.exports = {
     container: {
       center: true,
     },
+    extend: {
+      fontFamily: {
+        sans: ["Inter var"],
+      },
+    },
   },
-}
+};

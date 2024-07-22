@@ -8,7 +8,10 @@ import * as modDb from 'firebase/database';
 import SGUSer from '~/model/user/SGUser';
 import SGUserAcl from '~/model/user/SGUserAcl';
 
-type ClientOnlyFunc = (args: { modAuth: typeof modAuth, modDb: typeof modDb }) => void;
+type ClientOnlyFunc = (args: {
+  modAuth: typeof modAuth;
+  modDb: typeof modDb;
+}) => void;
 
 let isInitialized = false;
 const fbUser = ref<SGUSer>(SGUSer.newUnInitializedUser());
@@ -42,7 +45,7 @@ const setupFirebase = async () => {
     connectDatabaseEmulator(db, '127.0.0.1', 9000);
     connectAuthEmulator(auth, 'http://127.0.0.1:9099');
   }
-}
+};
 
 const setupUser = (fbUser: Ref<SGUSer>) => {
   const auth = modAuth.getAuth();
@@ -50,7 +53,7 @@ const setupUser = (fbUser: Ref<SGUSer>) => {
     if (user) {
       const aclRef = modDb.ref(modDb.getDatabase(), DbPath.user(user.uid));
       const snap = await modDb.get(aclRef);
-      const acl = new SGUserAcl(snap.val());
+      const acl = new SGUserAcl(snap.val() || {});
 
       fbUser.value = new SGUSer({
         uid: user.uid,
@@ -63,13 +66,12 @@ const setupUser = (fbUser: Ref<SGUSer>) => {
     } else {
       fbUser.value = SGUSer.newGuestUser();
     }
-  }
+  };
   modAuth.onAuthStateChanged(auth, onChange);
   modAuth.onIdTokenChanged(auth, onChange);
-}
+};
 
-
-export default function() {
+export default function () {
   /** Run when this code is run in the browser */
   const inClient = (func: ClientOnlyFunc) => {
     if (!window) return;
@@ -77,7 +79,7 @@ export default function() {
   };
 
   /** Run when this code is run during generation */
-  const outOfClient = (func: VoidFunction)=> {
+  const outOfClient = (func: VoidFunction) => {
     if (window) return;
     func();
   };

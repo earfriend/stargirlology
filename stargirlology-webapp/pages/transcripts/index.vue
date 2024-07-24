@@ -15,7 +15,7 @@ const user = fb.fbUser;
 useSeoMeta({
   title: 'Stargirlology',
   description: 'Stargirl Transcripts',
-})
+});
 
 watch(user, (user) => {
   console.log({ user });

@@ -10,7 +10,7 @@
 useSeoMeta({
   title: 'Stargirlology',
   description: 'The future home of Stargirlology',
-})
+});
 </script>
 
 <style scoped>

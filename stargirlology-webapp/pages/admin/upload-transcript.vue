@@ -161,7 +161,7 @@ const uploadCsv = () => {
           episodeNumber: epNumber,
           episodeTitle: episodeTitle.value,
           editors: [editor],
-        }
+        };
 
         const update = {
           [DbPath.transcriptBasic(transcript.episodeNumber)]: transcript,
@@ -171,9 +171,9 @@ const uploadCsv = () => {
 
       });
 
-      console.log(transcript)
+      console.log(transcript);
     },
   });
-}
+};
 
 </script>

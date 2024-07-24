@@ -125,7 +125,7 @@ const signup = () => {
 
     let createdUser = null;
     try {
-      const userCredential = await modAuth.createUserWithEmailAndPassword(auth, email.value, password.value)
+      const userCredential = await modAuth.createUserWithEmailAndPassword(auth, email.value, password.value);
       createdUser = userCredential.user;
 
 
@@ -173,8 +173,8 @@ const signup = () => {
         errorMessage: innerErr.message || 'unknown',
       };
     }
-  })
+  });
 
-}
+};
 
 </script>

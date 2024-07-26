@@ -11,6 +11,8 @@ const config = {
   singleQuote: true,
   jsxSingleQuote: true,
   experimentalTernaries: true,
+  bracketSameLine: true,
+  printWidth: 100,
   plugins: ["prettier-plugin-tailwindcss"],
 };
 

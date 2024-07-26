@@ -17,17 +17,17 @@ interface BasicTranscriptRow extends TimeInfo {
   editors: Array<EditorInfo>;
 }
 
-interface BasicTranscriptListItme {
+interface BasicTranscriptListItem {
   editors: Array<EditorInfo>;
   episodeNumber: number;
   episodeTitle: string;
 }
 
 
-interface BasicTranscript extends TimeInfo, BasicTranscriptListItme {
+interface BasicTranscript extends TimeInfo, BasicTranscriptListItem {
   speaker1: string;
   speaker2: string;
   rows: Array<BasicTranscriptRow>;
 }
 
-export type { BasicTranscript, BasicTranscriptRow, EditorInfo, BasicTranscriptListItme };
+export type { BasicTranscript, BasicTranscriptRow, EditorInfo, BasicTranscriptListItem };

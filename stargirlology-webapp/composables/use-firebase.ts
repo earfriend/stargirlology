@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
+import { initializeApp  } from 'firebase/app';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { getDatabase, connectDatabaseEmulator } from 'firebase/database';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
@@ -30,21 +30,27 @@ const setupFirebase = async () => {
     measurementId: 'G-L9Y6EJ7D44',
   };
 
+  // debugger;
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const db = getDatabase();
+  const auth = getAuth(app);
+  if (location && location.hostname === 'localhost') {
+    console.log('Running db on localhost');
+    // Point to the RTDB emulator running on localhost.
+    try {
+      // modAuth.initializeAuth(app);
+      connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+      connectDatabaseEmulator(db, '127.0.0.1', 9000);
+    } catch (e) {
+      console.error('=========== Error connecting to emulator ==================', e);
+    }
+  }
+
   isSupported().then((supported) => {
     if (!supported) return;
     getAnalytics(app);
   });
-
-  const db = getDatabase();
-  const auth = getAuth();
-  if (location && location.hostname === 'localhost') {
-    console.log('Running db on localhost');
-    // Point to the RTDB emulator running on localhost.
-    connectDatabaseEmulator(db, '127.0.0.1', 9000);
-    connectAuthEmulator(auth, 'http://127.0.0.1:9099');
-  }
 };
 
 const setupUser = (fbUser: Ref<SGUSer>) => {

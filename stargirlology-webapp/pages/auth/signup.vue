@@ -1,25 +1,21 @@
 <template>
-  <div class="w-full max-w-xs container pt-8">
-    <form
-      class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 "
-      @submit.prevent="signup">
+  <div class="container w-full max-w-xs pt-8">
+    <form class="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md" @submit.prevent="signup">
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-          Email
-        </label>
+        <label class="mb-2 block text-sm font-bold text-gray-700" for="email"> Email </label>
         <input
           id="email"
           v-model="email"
           type="email"
           :class="{
-            'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline': true,
+            'focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none': true,
             'border-red-500': errorInfo.errorCode.includes('user'),
           }"
-          placeholder="Username">
+          placeholder="Username" />
       </div>
 
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="displayName">
+        <label class="mb-2 block text-sm font-bold text-gray-700" for="displayName">
           Display Name
         </label>
         <input
@@ -27,29 +23,27 @@
           v-model="displayName"
           type="displayName"
           :class="{
-            'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline': true,
+            'focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none': true,
             'border-red-500': errorInfo.errorCode.includes('user'),
           }"
-          placeholder="Display name">
+          placeholder="Display name" />
       </div>
 
       <div class="mb-0">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-          Password
-        </label>
+        <label class="mb-2 block text-sm font-bold text-gray-700" for="password"> Password </label>
         <input
           id="password"
           v-model="password"
           type="password"
           :class="{
-            'shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline': true,
+            'focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none': true,
             'border-red-500': errorInfo.errorCode.includes('password'),
           }"
-          placeholder="******************">
+          placeholder="******************" />
       </div>
 
-      <div class="flex items-center justify-center mb-3">
-        <p class="text-red-500 text-xs italic">&nbsp; {{ errorInfo.errorMessage }}</p>
+      <div class="mb-3 flex items-center justify-center">
+        <p class="text-xs italic text-red-500">&nbsp; {{ errorInfo.errorMessage }}</p>
       </div>
 
       <div class="flex items-center justify-between">
@@ -57,21 +51,24 @@
           <button
             :disabled="!email || !displayName || !password"
             :class="{
-              'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline': true,
+              'focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none': true,
               'bg-blue-300 hover:bg-blue-300': !email || !displayName || !password,
             }"
             type="submit">
             Sign Up
           </button>
         </ClientOnly>
-        <a v-if="false" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+        <a
+          v-if="false"
+          class="inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800"
+          href="#">
           Forgot Password?
         </a>
       </div>
-
     </form>
-    <p class="text-center text-gray-500 text-xs">
-      &copy; <NuxtLink to="/legal/privacy">Privacy Policy</NuxtLink> | <NuxtLink to="/legal/tos">Terms of Service</NuxtLink>
+    <p class="text-center text-xs text-gray-500">
+      &copy; <NuxtLink to="/legal/privacy">Privacy Policy</NuxtLink> |
+      <NuxtLink to="/legal/tos">Terms of Service</NuxtLink>
     </p>
   </div>
 </template>
@@ -89,7 +86,6 @@ const errorInfo = ref({
 
 const signup = () => {
   // you can only signup in the client
-
   fb.inClient(async ({ modAuth, modDb }) => {
     errorInfo.value = {
       errorCode: '',
@@ -99,13 +95,18 @@ const signup = () => {
     const auth = modAuth.getAuth();
     const displayNameVal = displayName.value;
 
-    await auth.signOut();
+    // await auth.signOut();
 
     // client side validations
-    if (displayNameVal.match(/[^a-zA-Z0-9]/) || displayNameVal.length < 3 || displayNameVal.length > 32) {
+    if (
+      displayNameVal.match(/[^a-zA-Z0-9]/) ||
+      displayNameVal.length < 3 ||
+      displayNameVal.length > 32
+    ) {
       errorInfo.value = {
         errorCode: 'user/invalid-display-name',
-        errorMessage: 'Display name must be alphanumeric and greater than 3 characters and less than 32 characters.',
+        errorMessage:
+          'Display name must be alphanumeric and greater than 3 characters and less than 32 characters.',
       };
       return;
     }
@@ -125,9 +126,12 @@ const signup = () => {
 
     let createdUser = null;
     try {
-      const userCredential = await modAuth.createUserWithEmailAndPassword(auth, email.value, password.value);
+      const userCredential = await modAuth.createUserWithEmailAndPassword(
+        auth,
+        email.value,
+        password.value
+      );
       createdUser = userCredential.user;
-
 
       await modAuth.updateProfile(userCredential.user, {
         displayName: displayNameVal,
@@ -136,13 +140,14 @@ const signup = () => {
 
       const db = modDb.getDatabase();
 
-      const baseRef =  modDb.ref(db);
+      const baseRef = modDb.ref(db);
       const update = {
         [DbPath.usersAclIsApproved(userCredential.user.uid)]: false,
         [DbPath.usersAclCreatedAt(userCredential.user.uid)]: modDb.serverTimestamp(),
         [DbPath.usersAclLastLogin(userCredential.user.uid)]: modDb.serverTimestamp(),
         [DbPath.usersAclDisplayName(userCredential.user.uid)]: displayNameVal,
-        [DbPath.usersAclUserAgent(userCredential.user.uid)]: `${(window.navigator) ? window.navigator.userAgent : 'unknown'}`,
+        [DbPath.usersAclUserAgent(userCredential.user.uid)]:
+          `${window.navigator ? window.navigator.userAgent : 'unknown'}`,
         [DbPath.displayName(displayNameVal)]: userCredential.user.uid,
       };
 
@@ -154,8 +159,7 @@ const signup = () => {
       setTimeout(() => {
         navigateTo('/transcripts');
       }, 100);
-
-    } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    } catch (error: CatchParam) {
       let innerErr = error;
       console.error({ innerErr });
 
@@ -163,7 +167,7 @@ const signup = () => {
         if (createdUser) {
           await modAuth.deleteUser(createdUser);
         }
-      } catch (error2: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+      } catch (error2: CatchParam) {
         innerErr = error2;
         console.error({ innerErr });
       }
@@ -174,7 +178,5 @@ const signup = () => {
       };
     }
   });
-
 };
-
 </script>

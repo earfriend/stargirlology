@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     head: {
       link: [
         { rel: 'icon', type: 'image/x-icon' as never, href: '/favicon-sg.ico' },
-        { rel: 'stylesheet', href:'https://rsms.me/inter/inter.css' },
+        { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
       ],
     },
   },

@@ -12,7 +12,7 @@ export default createConfigForNuxt({
     "@stylistic/comma-dangle": ["error", {
         "arrays": "always-multiline",
         "objects": "always-multiline",
-        "imports": "never",
+        "imports": "only-multiline",
         "exports": "never",
         "functions": "never"
     }],

@@ -1,5 +1,5 @@
 <template>
-  <div class="container w-full max-w-xs pt-8">
+  <div class="container w-full max-w-xs pt-16 md:pt-0">
     <form class="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md" @submit.prevent="signup">
       <div class="mb-4">
         <label class="mb-2 block text-sm font-bold text-gray-700" for="email"> Email </label>
@@ -47,17 +47,15 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <ClientOnly>
-          <button
-            :disabled="!email || !displayName || !password"
-            :class="{
-              'focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none': true,
-              'bg-blue-300 hover:bg-blue-300': !email || !displayName || !password,
-            }"
-            type="submit">
-            Sign Up
-          </button>
-        </ClientOnly>
+        <button
+          :disabled="!email || !displayName || !password"
+          :class="{
+            'focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none': true,
+            'bg-blue-300 hover:bg-blue-300': !email || !displayName || !password,
+          }"
+          type="submit">
+          Sign Up
+        </button>
         <a
           v-if="false"
           class="inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800"

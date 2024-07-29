@@ -41,33 +41,17 @@
         <div
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
-        <ClientOnly>
-          <button
-            type="button"
-            class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-          >
-            <span class="absolute -inset-1.5" />
-            <span class="sr-only">View notifications</span>
-            <BellIcon class="h-6 w-6" aria-hidden="true" />
-          </button>
-        </ClientOnly>
 
           <!-- Profile dropdown -->
           <Menu as="div" class="relative ml-3">
             <div>
               <ClientOnly>
               <MenuButton
+                v-if="user.isLoggedIn()"
                 class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
               >
                 <span class="absolute -inset-1.5" />
                 <span class="sr-only">Open user menu</span>
-                <!--
-                <img
-                  class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                />
-                -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -96,27 +80,7 @@
               >
                 <MenuItem v-slot="{ active }">
                   <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]"
-                    >Your Profile</a
-                  >
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
-                    :class="[
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700',
-                    ]"
-                    >Settings</a
-                  >
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
+                    href="/auth/logout"
                     :class="[
                       active ? 'bg-gray-100' : '',
                       'block px-4 py-2 text-sm text-gray-700',
@@ -162,22 +126,11 @@ import {
   MenuItem,
   MenuItems
 } from '@headlessui/vue';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 import type SGUSer from '~/model/user/SGUser';
 
 const fb = useFirebase();
 const user = fb.fbUser;
-
-/*
-      <NuxtLink class="p-2 drop-shadow" to="/">Stargirlology</NuxtLink>
-      <NuxtLink to="/auth/signup">Signup</NuxtLink>
-      <NuxtLink to="/auth/login">Login</NuxtLink>
-      <NuxtLink to="/admin">Admin</NuxtLink>
-      <NuxtLink to="/auth/logout">Logout</NuxtLink>
-
-        <span>{{ (user.isNotGuest()) ? user.displayName : 'Guest' }}</span>&nbsp;
-        <span v-if="user.isNotGuest()">(<NuxtLink to="/auth/logout">Logout</NuxtLink>)</span>
-*/
 
 const navigation = ref(new Array<{ name: string, href: string, current: boolean, }>());
 const key = ref(0);
@@ -196,6 +149,8 @@ const setupUser = (newUser: SGUSer) => {
       { name: 'Login', href: '/auth/login', current: false },
     ];
   }
+
+
 };
 
 setupUser(user.value);

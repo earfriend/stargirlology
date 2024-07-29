@@ -34,16 +34,17 @@
         type="text"
         placeholder="Tag 2 Speaker Name"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
-      <input
-        id="input"
-        ref="inputFile"
-        :class="{
-          'pb-2': true,
-        }"
-        type="file" >
+
+      <UploadDropzone
+        :message="`CSV file from Google Cloud Speech-to-Text`"
+        class="mb-4"
+        accept="text/csv"
+        @on-file-change="onFileChange"
+        />
+
+      <p v-if="fileName" class="text-xs text-center text-stone-500 pb-4">{{ fileName }}</p>
 
       <button
-        :disabled="!inputFile || !inputFile.files"
         :class="{
           'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline': true,
         }"
@@ -57,16 +58,22 @@
 <script setup lang="ts">
 import papa from 'papaparse';
 import type { TimeInfo } from '~/model/TimeInfo';
-import type { BasicTranscript, BasicTranscriptListItme, EditorInfo } from '~/model/transcript/BasicTranscript';
+import type { BasicTranscript, BasicTranscriptListItem, EditorInfo } from '~/model/transcript/BasicTranscript';
 
 const fb = useFirebase();
 const user = fb.fbUser;
 
-const inputFile = ref<HTMLInputElement | null>(null);
+const csvFile = ref<File | null>(null);
+const fileName = ref<string>('');
 const episodeNumber = ref<string>('');
 const speaker1 = ref<string>('Emma');
 const speaker2 = ref<string>('');
 const episodeTitle = ref<string>('');
+
+const onFileChange = (file: File) => {
+  csvFile.value = file;
+  fileName.value = file.name;
+};
 
 type PapaResult = {
   data: Record<string, string>[];
@@ -82,7 +89,7 @@ type PapaResult = {
 };
 
 const uploadCsv = () => {
-  if (!inputFile.value || !inputFile.value.files) {
+  if (!csvFile.value) {
     console.error('No file input');
     return;
   }
@@ -108,7 +115,7 @@ const uploadCsv = () => {
     prettyDateCreated: when.prettyDateCreated,
   };
 
-  papa.parse(inputFile.value.files[0], {
+  papa.parse(csvFile.value, {
     header: true, // First row is header
     complete: async (results) => {
       const r = results as PapaResult;
@@ -157,7 +164,7 @@ const uploadCsv = () => {
       fb.inClient(async ({ modDb }) => {
         const db = modDb.getDatabase();
 
-        const transcriptListItem: BasicTranscriptListItme = {
+        const transcriptListItem: BasicTranscriptListItem = {
           episodeNumber: epNumber,
           episodeTitle: episodeTitle.value,
           editors: [editor],

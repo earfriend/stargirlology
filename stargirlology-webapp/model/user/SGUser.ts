@@ -65,4 +65,8 @@ export default class SGUSer implements FirebaseUser {
   public isNotGuest(): boolean {
     return this.displayName !== 'Guest' && this.displayName !== 'Uninitialized User';
   }
+
+  public isLoggedIn(): boolean {
+    return this.isNotGuest();
+  }
 }

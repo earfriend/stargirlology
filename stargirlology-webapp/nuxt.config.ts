@@ -1,9 +1,12 @@
 const ownModuleKeys = [
+  '',
+   /*
   'firebase/app',
   'firebase/analytics',
   'firebase/database',
   'firebase/auth',
   'papaparse',
+  */
 ];
 
 // https://nuxt.com/docs/api/configuration/nuxt-config

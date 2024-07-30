@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import papa from 'papaparse';
+import papa from 'papaparse'; // todo lazy load this
 import type { TimeInfo } from '~/model/TimeInfo';
 import type { BasicTranscript, BasicTranscriptListItem, EditorInfo } from '~/model/transcript/BasicTranscript';
 

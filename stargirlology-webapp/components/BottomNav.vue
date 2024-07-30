@@ -77,7 +77,7 @@ const navigation: Array<{ name: string, href: string, current: boolean, }> = [
   { name: 'Patreon (Official)', href: 'https://www.patreon.com/STARGIRLpod/posts', current: false },
   { name: 'Emma\'s Istagram (Official)', href: 'https://www.instagram.com/emmaglennbaker/', current: false },
   { name: 'Reddit (Fan page)', href: 'https://www.reddit.com/r/STARGIRLpod/', current: false },
-  { name: 'Contact', href: '/user/contact', current: false },
+  { name: 'Contact', href: '/contact', current: false },
   { name: 'Terms of service', href: '/legal/tos', current: false },
   { name: 'Privacy Policy', href: '/legal/privacy', current: false },
 ];

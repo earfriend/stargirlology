@@ -49,6 +49,10 @@ const displayName = (displayName: string): string => {
   return buildPath('displayNames', displayName.toLowerCase());
 };
 
+const newContact = (): string => {
+  return buildPath('contact-request');
+};
+
 export default {
   user,
   usersAclIsApproved,
@@ -60,4 +64,5 @@ export default {
   transcriptBasic,
   transcriptList,
   transcriptListItem,
+  newContact,
 };

@@ -55,6 +55,13 @@
             ".write": "!data.exists() && auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true"
           }
         }
+      },
+      "contact-request": {
+        ".read": false,
+        ".write": false,
+        "$msg": {
+          ".write": "!data.exists() && newData.child('name').exists() && newData.child('email').exists() && newData.child('comment').exists() && newData.child('timestamp').val() == now"
+        }
       }
     }
   }

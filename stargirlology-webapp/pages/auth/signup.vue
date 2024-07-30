@@ -59,7 +59,7 @@
         <a
           v-if="false"
           class="inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800"
-          href="#">
+          href="/contact">
           Forgot Password?
         </a>
       </div>

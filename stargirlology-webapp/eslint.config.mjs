@@ -20,5 +20,6 @@ export default createConfigForNuxt({
     '@stylistic/block-spacing': ['error', 'always'],
     '@stylistic/semi': ['error', 'always'],
     'vue/html-self-closing': ['off'],
+    'no-console': ['warn'],
   }
 });

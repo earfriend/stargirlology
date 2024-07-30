@@ -48,7 +48,7 @@
           type="submit">
           Sign In
         </button>
-        <a v-if="false" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+        <a v-if="false" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="/contact">
           Forgot Password?
         </a>
       </div>

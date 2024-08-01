@@ -151,7 +151,6 @@ const contact = () => {
         setTimeout(() => {
           if (thankYou.value) {
             thankYou.value.scrollIntoView({ behavior: 'smooth' });
-            console.log('scrollinggggg');
           } else {
             // eslint-disable-next-line no-console
             console.error('no thank you');

@@ -17,8 +17,10 @@ let isInitialized = false;
 const fbUser = ref<SGUSer>(SGUSer.newUnInitializedUser());
 
 const setupFirebase = async () => {
+  // eslint-disable-next-line no-console
   console.log('Setting up Firebase');
 
+  console.log('setupFirebase', 'modDb', !!modDb, 'modAuth', !!modAuth);
   const firebaseConfig = {
     apiKey: 'AIzaSyCIooYtFaWQ_li4P0WvhNwxb5BXpy5g9W0',
     authDomain: 'stargirlology.firebaseapp.com',
@@ -30,12 +32,12 @@ const setupFirebase = async () => {
     measurementId: 'G-L9Y6EJ7D44',
   };
 
-  // debugger;
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const db = getDatabase();
   const auth = getAuth(app);
   if (location && location.hostname === 'localhost') {
+    // eslint-disable-next-line no-console
     console.log('Running db on localhost');
     // Point to the RTDB emulator running on localhost.
     try {
@@ -43,6 +45,7 @@ const setupFirebase = async () => {
       connectAuthEmulator(auth, 'http://127.0.0.1:9099');
       connectDatabaseEmulator(db, '127.0.0.1', 9000);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('=========== Error connecting to emulator ==================', e);
     }
   }
@@ -78,6 +81,7 @@ const setupUser = (fbUser: Ref<SGUSer>) => {
 };
 
 export default function () {
+  console.log('anon', 'modDb', !!modDb, 'modAuth', !!modAuth);
   /** Run when this code is run in the browser */
   const inClient = (func: ClientOnlyFunc) => {
     if (!window) return;

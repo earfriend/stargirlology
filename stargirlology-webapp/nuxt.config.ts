@@ -10,6 +10,10 @@ const ownModuleKeys = [
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: true,
+  sourcemap: {
+    server: true,
+    client: true,
+  },
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',

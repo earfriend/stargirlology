@@ -137,7 +137,7 @@ const uploadCsv = () => {
       let index = indexStep;
       let originalUuid = 0;
       let uuid = originalUuid;
-      r.data.slice(0, 10).forEach((row) => {
+      r.data.forEach((row) => {
         const prettyRow = {
           confidence: parseFloat(row['Confidence']),
           startTime: parseFloat(row['Start time']),

@@ -57,6 +57,10 @@ export default class SGUSer implements FirebaseUser {
     });
   }
 
+  public isUninitialized(): boolean {
+    return this.displayName === 'Uninitialized User';
+  }
+
   public isGuest(): boolean {
     return this.displayName === 'Guest';
   }

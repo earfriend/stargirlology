@@ -1,10 +1,11 @@
 const ownModuleKeys = [
-  // 'firebase/app',
   'firebase/analytics',
   'firebase/database',
   'firebase/auth',
   'papaparse',
 ];
+
+const isDebugModulesList = false;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -41,7 +42,10 @@ export default defineNuxtConfig({
             const seprateModule = ownModuleKeys.find((module) => id.includes(module));
             if (!seprateModule) return;
 
-            console.log({ seprateModule, id });
+            if (isDebugModulesList) {
+              // eslint-disable-next-line no-console
+              console.log({ seprateModule, id });
+            }
             return seprateModule;
           },
         },

@@ -135,6 +135,7 @@ const user = fb.fbUser;
 const navigation = ref(new Array<{ name: string, href: string, current: boolean, }>());
 const key = ref(0);
 
+
 const setupUser = (newUser: SGUSer) => {
   if (newUser.isNotGuest()) {
     navigation.value = [
@@ -153,12 +154,12 @@ const setupUser = (newUser: SGUSer) => {
 
 };
 
-setupUser(user.value);
-watch(user, (newUser) => {
+// setupUser(user.value);
+watch(user, (newUser, oldUser) => {
+  console.log({newUser: newUser.displayName, oldUser: oldUser?.displayName });
   key.value += 1;
-  console.log(key.value);
   setupUser(newUser);
-});
+}, { immediate: true });
 
 
 </script>

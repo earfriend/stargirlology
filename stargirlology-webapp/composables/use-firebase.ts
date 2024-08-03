@@ -20,7 +20,6 @@ const setupFirebase = async () => {
   // eslint-disable-next-line no-console
   console.log('Setting up Firebase');
 
-  console.log('setupFirebase', 'modDb', !!modDb, 'modAuth', !!modAuth);
   const firebaseConfig = {
     apiKey: 'AIzaSyCIooYtFaWQ_li4P0WvhNwxb5BXpy5g9W0',
     authDomain: 'stargirlology.firebaseapp.com',
@@ -80,22 +79,22 @@ const setupUser = (fbUser: Ref<SGUSer>) => {
   modAuth.onIdTokenChanged(auth, onChange);
 };
 
+/** Run when this code is run in the browser */
+const inClient = (func: ClientOnlyFunc) => {
+  if (!window) return;
+  func({ modAuth, modDb });
+};
+
+/** Run when this code is run during generation */
+const outOfClient = (func: VoidFunction) => {
+  if (window) return;
+  func();
+};
+
 export default function () {
-  console.log('anon', 'modDb', !!modDb, 'modAuth', !!modAuth);
-  /** Run when this code is run in the browser */
-  const inClient = (func: ClientOnlyFunc) => {
-    if (!window) return;
-    func({ modAuth, modDb });
-  };
-
-  /** Run when this code is run during generation */
-  const outOfClient = (func: VoidFunction) => {
-    if (window) return;
-    func();
-  };
-
   inClient(() => {
     if (isInitialized) return;
+    console.log('initializing firebase');
     isInitialized = true;
 
     setupFirebase();

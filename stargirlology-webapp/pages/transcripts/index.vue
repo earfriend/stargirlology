@@ -42,7 +42,6 @@ const transcriptList = ref<Array<BasicTranscriptListItem>>([]);
 fb.inClient(async ({ modDb }) => {
   const ref = modDb.ref(modDb.getDatabase(), DbPath.transcriptList());
   const list = (await modDb.get(ref)).val() as Record<number, BasicTranscriptListItem>;
-  console.log(list);
 
   Object.entries(list).forEach(([, value]) => {
     transcriptList.value.push(value);

@@ -11,5 +11,9 @@
     <ul>
       <li>Favicon Generator: https://favicon.io/favicon-generator/ (Font: Charm)</li>
     </ul>
+    <ul>
+      <li>Loading Spinner: https://tobiasahlin.com/spinkit/</li>
+    </ul>
   </div>
+
 </template>

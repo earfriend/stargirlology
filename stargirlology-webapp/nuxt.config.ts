@@ -1,5 +1,5 @@
 const ownModuleKeys = [
-  'firebase/app',
+  // 'firebase/app',
   'firebase/analytics',
   'firebase/database',
   'firebase/auth',

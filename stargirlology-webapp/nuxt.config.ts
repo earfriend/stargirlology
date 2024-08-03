@@ -1,4 +1,3 @@
-/*
 const ownModuleKeys = [
   'firebase/app',
   'firebase/analytics',
@@ -6,7 +5,6 @@ const ownModuleKeys = [
   'firebase/auth',
   'papaparse',
 ];
-*/
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -20,8 +18,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
     '@nuxt/eslint',
-
-    // '@nuxtjs/stylelint-module',
   ],
   eslint: {
     config: {
@@ -41,7 +37,6 @@ export default defineNuxtConfig({
       sourcemap: true,
       rollupOptions: {
         output: {
-          /*
           manualChunks(id) {
             const seprateModule = ownModuleKeys.find((module) => id.includes(module));
             if (!seprateModule) return;
@@ -49,7 +44,6 @@ export default defineNuxtConfig({
             console.log({ seprateModule, id });
             return seprateModule;
           },
-          */
         },
       },
     },

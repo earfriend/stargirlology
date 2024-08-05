@@ -40,14 +40,11 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <button
+        <ActionButton
           :disabled="!email || !password"
-          :class="{
-            'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline': true,
-          }"
           type="submit">
           Sign In
-        </button>
+        </ActionButton>
         <a v-if="false" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="/contact">
           Forgot Password?
         </a>

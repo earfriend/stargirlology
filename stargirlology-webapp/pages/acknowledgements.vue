@@ -14,6 +14,8 @@
     <ul>
       <li>Loading Spinner: https://tobiasahlin.com/spinkit/</li>
     </ul>
+    <ul>
+      <li>Color palette: https://goodpalette.io/e8a323-44eb5d-c9c6bf</li>
+    </ul>
   </div>
-
 </template>

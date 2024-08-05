@@ -47,15 +47,11 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <button
+        <ActionButton
           :disabled="!email || !displayName || !password"
-          :class="{
-            'focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none': true,
-            'bg-blue-300 hover:bg-blue-300': !email || !displayName || !password,
-          }"
           type="submit">
           Sign Up
-        </button>
+        </ActionButton>
         <a
           v-if="false"
           class="inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800"

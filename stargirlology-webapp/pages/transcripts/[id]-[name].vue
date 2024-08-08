@@ -1,6 +1,6 @@
 <template>
-  <div class="content flex flex-col items-center bg-slate-700">
-    <NuxtLink to="/transcripts" class="text-gray-200">
+  <div class="content flex flex-col items-center bg-n-800">
+    <NuxtLink to="/transcripts" class="text-gray-200 h-6">
       Back to Transcripts
     </NuxtLink>
 
@@ -8,19 +8,19 @@
       <h1>Loading...</h1>
     </div>
 
-    <div v-if="transcript !== null" class="flex w-full flex-col items-center bg-sky-100">
+    <div v-if="transcript !== null" class="flex w-full flex-col items-center bg-p-200">
       <h2 class="p-4 text-3xl font-bold">
         {{ transcript.episodeNumber }} - {{ transcript.episodeTitle }}
       </h2>
     </div>
 
-    <div v-if="transcript !== null" class="transcript-box bg-sky-200">
+    <div v-if="transcript !== null" class="transcript-box bg-p-200">
       <template v-for="row in transcript.rows" :key="row.uuid">
         <div
           class="grid grid-cols-12 hover:cursor-pointer hover:bg-violet-50"
           @click="onEditRow(row)">
-          <p class="col-span-2 mb-1 bg-sky-300 p-1">{{ row.startTime }}-{{ row.endTime }}s</p>
-          <p class="col-span-10 mb-1 bg-sky-300 p-1">{{ row.transcript }}</p>
+          <p class="col-span-2 mb-1 bg-p-100 p-1">{{ row.startTime }}-{{ row.endTime }}s</p>
+          <p class="col-span-10 mb-1 bg-p-100 p-1 text-p-800">{{ row.transcript }}</p>
         </div>
       </template>
     </div>
@@ -66,7 +66,7 @@
       ><!-- content -->
 
       <template #actions>
-        <ActionButton class="ml-2" @click="handleSuggestion">Suggest!</ActionButton>
+        <ActionButton class="ml-2" @click="handleSuggestion">Suggest! (coming soon)</ActionButton>
       </template>
     </BasicModal>
   </div>

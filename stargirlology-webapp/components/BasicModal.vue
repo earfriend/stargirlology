@@ -91,5 +91,7 @@ const setIsOpen = (value: boolean) => {
 <style lang="scss" scoped>
 .modal-box {
   max-width: 80ch;
+  margin-bottom: 30px;
 }
+
 </style>

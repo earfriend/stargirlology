@@ -1,18 +1,19 @@
 <template>
-  <div class="content flex flex-col items-center w-full">
-    <div>
-      <h1>Transcripts</h1>
-      <p>Coming soon!</p>
-      <p>Transcripts are AI Generated and are not going to be perfectly accurate.</p>
-
-      <ul>
-        <li v-for="transcript in transcriptList" :key="transcript.episodeNumber">
-          <NuxtLink :to="`/transcripts/${transcript.episodeNumber}-${transcript.episodeTitle}`">View
-            {{ transcript.episodeNumber }} - {{ transcript.episodeTitle }}
-          </NuxtLink>
-        </li>
-      </ul>
+  <div class="content min-h-[80vh] max-w-[80ch] flex flex-col items-center w-full">
+    <div class="h-6 bg-n-800 w-full"></div>
+    <div class="flex w-full flex-col items-center ">
+      <h2 class="m-w-20 m-2 w-full rounded-md border px-10 py-4 text-3xl font-bold bg-p-200">Transcripts</h2>
     </div>
+    <template v-for="transcript in transcriptList" :key="transcript.episodeNumber">
+      <NuxtLink
+        :class="{
+          'm-w-[40ch] m-2 w-full rounded-md border p-4': true,
+          'bg-p-400 text-p-800 hover:bg-p-500': true,
+        }"
+        :to="`/transcripts/${transcript.episodeNumber}-${transcript.episodeTitle}`">
+        {{ transcript.episodeNumber }} - {{ transcript.episodeTitle }}
+      </NuxtLink>
+    </template>
   </div>
 </template>
 
@@ -49,8 +50,9 @@ fb.inClient(async ({ modDb }) => {
 });
 </script>
 
-<style scoped>
-.content {
-  border: 1px solid #3de;
+<style lang="scss" scoped>
+.transcript-box {
+  max-width: 80ch;
+  border: 1px solid black;
 }
 </style>

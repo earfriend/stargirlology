@@ -120,22 +120,35 @@ const user = fb.fbUser;
 
 const navigation = ref(new Array<{ name: string; href: string; current: boolean }>());
 const key = ref(0);
+const router = useRouter();
+
+console.log(`current: ${router.currentRoute.value}`);
 
 const setupUser = (newUser: SGUSer) => {
   if (newUser.isNotGuest()) {
     navigation.value = [
-      { name: 'Stargirlology', href: '/', current: true },
+      { name: 'Stargirlology', href: '/', current: false },
+      { name: 'Transcripts', href: '/transcripts', current: false },
       { name: 'Logout', href: '/auth/logout', current: false },
       { name: 'Admin', href: '/admin', current: false },
     ];
   } else {
     navigation.value = [
-      { name: 'Stargirlology', href: '/', current: true },
+      { name: 'Stargirlology', href: '/', current: false },
+      { name: 'Transcripts', href: '/transcripts', current: false },
       { name: 'Signup', href: '/auth/signup', current: false },
       { name: 'Login', href: '/auth/login', current: false },
     ];
   }
+  navigation.value.forEach((item) => {
+    item.current = item.href === router.currentRoute.value.path;
+  });
 };
+router.afterEach(() => {
+  navigation.value.forEach((item) => {
+    item.current = item.href === router.currentRoute.value.path;
+  });
+});
 
 // setupUser(user.value);
 watch(

@@ -153,7 +153,6 @@ router.afterEach(() => {
   });
 });
 
-// setupUser(user.value);
 watch(
   user,
   (newUser) => {

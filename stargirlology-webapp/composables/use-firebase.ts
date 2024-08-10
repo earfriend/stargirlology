@@ -11,10 +11,60 @@ import SGUserAcl from '~/model/user/SGUserAcl';
 type ClientOnlyFunc = (args: {
   modAuth: typeof modAuth;
   modDb: typeof modDb;
-}) => void;
+}) => void | Promise<void>;
+
+type OutOfClientFunc = () => void | Promise<void>;
 
 let isInitialized = false;
 const fbUser = ref<SGUSer>(SGUSer.newUnInitializedUser());
+const userIsLoggedIn = computed(() => fbUser.value.uid !== '');
+const userIsInitialized = computed(() => !fbUser.value.isUninitialized());
+
+watch(userIsInitialized, (isInitialized) => {
+  // eslint-disable-next-line no-console
+  console.log('User is initalized', isInitialized);
+});
+
+watch(userIsLoggedIn, (isLoggedIn) => {
+  // eslint-disable-next-line no-console
+  console.log('User is logged in', isLoggedIn);
+});
+
+const setupUser = () => {
+  // listen for changes to the user
+  const onChange = async (user: modAuth.User | null) => {
+    if (user !== null) {
+      // eslint-disable-next-line no-console
+      console.log('User changed', user.email);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('User changed', user);
+    }
+
+    if (user) {
+      const aclRef = modDb.ref(modDb.getDatabase(), DbPath.user(user.uid));
+      const snap = await modDb.get(aclRef);
+      const acl = new SGUserAcl(snap.val() || {});
+
+      fbUser.value = new SGUSer({
+        uid: user.uid,
+        email: user.email || '',
+        displayName: user.displayName || '',
+        photoURL: user.photoURL || '',
+        acl,
+      });
+      // ...
+    } else {
+      fbUser.value = SGUSer.newGuestUser();
+    }
+  };
+
+  // eslint-disable-next-line no-console
+  console.log('Setting up user');
+  const auth = modAuth.getAuth();
+  modAuth.onAuthStateChanged(auth, onChange);
+  modAuth.onIdTokenChanged(auth, onChange);
+};
 
 const setupFirebase = async () => {
   // eslint-disable-next-line no-console
@@ -33,6 +83,10 @@ const setupFirebase = async () => {
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+
+  // Setup the user so its ready for authorization
+  setupUser();
+
   const db = getDatabase();
   const auth = getAuth(app);
   if (location && location.hostname === 'localhost') {
@@ -55,51 +109,34 @@ const setupFirebase = async () => {
   });
 };
 
-const setupUser = (fbUser: Ref<SGUSer>) => {
-  const auth = modAuth.getAuth();
-  const onChange = async (user: modAuth.User | null) => {
-    if (user) {
-      const aclRef = modDb.ref(modDb.getDatabase(), DbPath.user(user.uid));
-      const snap = await modDb.get(aclRef);
-      const acl = new SGUserAcl(snap.val() || {});
 
-      fbUser.value = new SGUSer({
-        uid: user.uid,
-        email: user.email || '',
-        displayName: user.displayName || '',
-        photoURL: user.photoURL || '',
-        acl,
-      });
-      // ...
-    } else {
-      fbUser.value = SGUSer.newGuestUser();
-    }
-  };
-  modAuth.onAuthStateChanged(auth, onChange);
-  modAuth.onIdTokenChanged(auth, onChange);
-};
+/** Wait for the user to be initialized (useful to avoid flicker) */
+const waitForInitailization = new Promise<void>((resolve) => {
+  watch(userIsInitialized, () => {
+    resolve();
+  }, { once: true });
+});
 
 /** Run when this code is run in the browser */
-const inClient = (func: ClientOnlyFunc) => {
-  if (!window) return;
-  func({ modAuth, modDb });
+const inClient = async (func: ClientOnlyFunc): Promise<void> => {
+  if (!window) return Promise.resolve();
+  await waitForInitailization;
+  return await func({ modAuth, modDb });
 };
 
 /** Run when this code is run during generation */
-const outOfClient = (func: VoidFunction) => {
-  if (window) return;
-  func();
+const outOfClient = async (func: OutOfClientFunc): Promise<void> => {
+  if (window) return Promise.resolve();
+  return await func();
 };
 
 export default function () {
-  inClient(() => {
-    if (isInitialized) return;
-    console.log('initializing firebase');
-    isInitialized = true;
 
+  // Setup the firebase if we are in the client and it has not been setup
+  if (!isInitialized && window) {
+    isInitialized = true;
     setupFirebase();
-    setupUser(fbUser);
-  });
+  }
 
   return {
     inClient,
@@ -107,3 +144,4 @@ export default function () {
     fbUser,
   };
 }
+

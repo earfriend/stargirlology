@@ -64,22 +64,13 @@
 
 <script setup type="ts">
 const fb = useFirebase();
-
 const email = ref('');
 const password = ref('');
-const user = fb.fbUser;
 const errorInfo = ref({
   errorCode: '',
   errorMessage: '',
 });
 
-
-fb.inClient(({ modAuth }) => {
-  const auth = modAuth.getAuth();
-  modAuth.onAuthStateChanged(auth, (user) => {
-    console.log({ user });
-  });
-});
 
 const login = () => {
   errorInfo.value = {
@@ -95,12 +86,14 @@ const login = () => {
     const auth = modAuth.getAuth();
     modAuth.signInWithEmailAndPassword(auth, email.value, password.value)
       .then(async (userCredential) => {
-        user.value = {
+        /*
+        user.value = new SGUSer({
           email: userCredential.user.email,
           uid: userCredential.user.uid,
           displayName: userCredential.user.displayName,
           photoURL: userCredential.user.photoURL,
-        };
+        });
+        */
 
         const db = modDb.getDatabase();
         const baseRef = modDb.ref(db);
@@ -110,7 +103,11 @@ const login = () => {
         };
 
         await modDb.update(baseRef, update);
-        navigateTo('/transcripts');
+
+        nextTick(() => {
+          navigateTo('/transcripts');
+        });
+
       })
       .catch((error) => {
         // eslint-disable-next-line no-console

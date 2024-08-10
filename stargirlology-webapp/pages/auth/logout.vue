@@ -15,9 +15,11 @@ fb.inClient(async ({ modAuth }) => {
   try {
     await modAuth.signOut(modAuth.getAuth());
 
-    if (fb.fbUser.value.isGuest()) {
-      navigateTo('/auth/login');
-    }
+    nextTick(() => {
+      if (fb.fbUser.value.isGuest()) {
+        navigateTo('/auth/login');
+      }
+    });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error signing out:', error);

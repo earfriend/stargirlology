@@ -87,12 +87,14 @@ type PapaResult = {
 
 const uploadCsv = () => {
   if (!csvFile.value) {
+    // eslint-disable-next-line no-console
     console.error('No file input');
     return;
   }
 
   const epNumber = parseInt(episodeNumber.value, 10);
   if (Number.isNaN(epNumber)) {
+    // eslint-disable-next-line no-console
     console.error('Invalid episode number');
     return;
   }
@@ -114,12 +116,8 @@ const uploadCsv = () => {
 
   papa.parse(csvFile.value, {
     header: true, // First row is header
-    complete: async (results) => {
-      const r = results as PapaResult;
-      r.meta.fields.forEach((field) => {
-        console.log(field);
-      });
-
+    complete: async (rr) => {
+      const results = rr as PapaResult;
       const transcript: BasicTranscript = {
         ...when,
         episodeNumber: epNumber,
@@ -135,7 +133,7 @@ const uploadCsv = () => {
       let uuidIndex = 0;
       let originalUuid = `${epNumber}-${uuidIndex}-0`;
       let uuid = originalUuid;
-      r.data.forEach((row) => {
+      results.data.forEach((row) => {
         const prettyRow = {
           confidence: parseFloat(row['Confidence']),
           startTime: parseFloat(row['Start time']),
@@ -160,22 +158,22 @@ const uploadCsv = () => {
         transcript.rows.push(newRow);
       });
 
-      fb.inClient(async ({ modDb }) => {
-        const db = modDb.getDatabase();
-
+      await fb.inClient(async ({ modDb }) => {
         const transcriptListItem: BasicTranscriptListItem = {
           episodeNumber: epNumber,
           episodeTitle: episodeTitle.value,
           editors: [editor],
         };
 
+        const baseRef = modDb.ref(modDb.getDatabase());
         const update = {
           [DbPath.transcriptBasic(transcript.episodeNumber)]: transcript,
           [DbPath.transcriptListItem(transcriptListItem.episodeNumber)]: transcriptListItem,
         };
-        modDb.update(modDb.ref(db), update);
-
+        await modDb.update(baseRef, update);
       });
+
+      navigateTo(`/transcripts/${epNumber}-${episodeTitle.value}`);
     },
   });
 };

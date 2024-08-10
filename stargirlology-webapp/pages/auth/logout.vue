@@ -2,7 +2,7 @@
   <div>
     <p>Logging out...</p>
     <pre>
-      {{ user }}
+      {{ user.displayName }}
     </pre>
   </div>
 </template>
@@ -19,6 +19,7 @@ fb.inClient(async ({ modAuth }) => {
       navigateTo('/auth/login');
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error signing out:', error);
   }
 });

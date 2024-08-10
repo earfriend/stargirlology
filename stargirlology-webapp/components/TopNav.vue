@@ -122,16 +122,19 @@ const navigation = ref(new Array<{ name: string; href: string; current: boolean 
 const key = ref(0);
 const router = useRouter();
 
-console.log(`current: ${router.currentRoute.value}`);
-
 const setupUser = (newUser: SGUSer) => {
   if (newUser.isNotGuest()) {
     navigation.value = [
       { name: 'Stargirlology', href: '/', current: false },
       { name: 'Transcripts', href: '/transcripts', current: false },
       { name: 'Logout', href: '/auth/logout', current: false },
-      { name: 'Admin', href: '/admin', current: false },
     ];
+    if (newUser.acl.isPermitted('ADMIN')) {
+      navigation.value.push(
+        { name: 'Admin', href: '/admin', current: false }
+      );
+    }
+
   } else {
     navigation.value = [
       { name: 'Stargirlology', href: '/', current: false },
@@ -153,8 +156,7 @@ router.afterEach(() => {
 // setupUser(user.value);
 watch(
   user,
-  (newUser, oldUser) => {
-    console.log({ newUser: newUser.displayName, oldUser: oldUser?.displayName });
+  (newUser) => {
     key.value += 1;
     setupUser(newUser);
   },

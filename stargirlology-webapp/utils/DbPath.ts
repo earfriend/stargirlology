@@ -53,6 +53,10 @@ const newContact = (): string => {
   return buildPath('contact-request');
 };
 
+const newContactTranscriptSuggestion = (): string => {
+  return buildPath('contact-transcript-suggestion');
+};
+
 export default {
   user,
   usersAclIsApproved,
@@ -65,4 +69,5 @@ export default {
   transcriptList,
   transcriptListItem,
   newContact,
+  newContactTranscriptSuggestion,
 };

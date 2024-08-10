@@ -34,7 +34,10 @@
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95">
             <DialogPanel
-              class="modal-box rounded-xl border-2 border-blue-600 bg-blue-400 bg-opacity-95 p-4 hover:bg-opacity-100">
+              :class="{
+                'modal-box rounded-xl border-2 bg-opacity-95 p-4 hover:bg-opacity-100': true,
+                'border-p-900 bg-p-300': true,
+              }">
               <DialogTitle class="mb-0 text-2xl font-semibold">
                 <slot name="title" />
               </DialogTitle>
@@ -49,7 +52,10 @@
 
               <div class="flex flex-row justify-between">
                 <button
-                  class="rounded border border-solid border-slate-200 p-2 text-slate-200 hover:bg-slate-50 hover:text-slate-900"
+                  :class="{
+                    'rounded border border-solid  p-2  ': true,
+                    'border-n-200 text-n-200 hover:bg-p-500 bg-p-600 hover:text-p-900': true,
+                  }"
                   @click="setIsOpen(false)">
                   Cancel
                 </button>

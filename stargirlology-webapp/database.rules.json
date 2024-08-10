@@ -57,10 +57,17 @@
         }
       },
       "contact-request": {
-        ".read": false,
+        ".read": "auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true",
         ".write": false,
         "$msg": {
           ".write": "!data.exists() && newData.child('name').exists() && newData.child('email').exists() && newData.child('comment').exists() && newData.child('timestamp').val() == now"
+        }
+      },
+      "contact-transcript-suggestion": {
+        ".read": "auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true",
+        ".write": false,
+        "$msg": {
+          ".write": "auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true"
         }
       }
     }

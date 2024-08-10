@@ -89,8 +89,6 @@ const signup = () => {
     const auth = modAuth.getAuth();
     const displayNameVal = displayName.value;
 
-    // await auth.signOut();
-
     // client side validations
     if (
       displayNameVal.match(/[^a-zA-Z0-9]/) ||
@@ -110,6 +108,7 @@ const signup = () => {
     const displayNamesRef = modDb.ref(db, DbPath.displayName(displayNameVal));
 
     if ((await modDb.get(displayNamesRef)).exists()) {
+      // eslint-disable-next-line no-console
       console.log('display name exists', (await modDb.get(displayNamesRef)).val());
       errorInfo.value = {
         errorCode: 'user/display-name-exists',
@@ -133,7 +132,6 @@ const signup = () => {
       await userCredential.user.getIdToken(true);
 
       const db = modDb.getDatabase();
-
       const baseRef = modDb.ref(db);
       const update = {
         [DbPath.usersAclIsApproved(userCredential.user.uid)]: false,

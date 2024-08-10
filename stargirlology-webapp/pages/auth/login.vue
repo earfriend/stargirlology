@@ -102,18 +102,18 @@ const login = () => {
           photoURL: userCredential.user.photoURL,
         };
 
-        const baseRef =  modDb.ref(db);
+        const db = modDb.getDatabase();
+        const baseRef = modDb.ref(db);
         const update = {
-          [dbPath.usersAclLastLogin(userCredential.user.uid)]: modDb.serverTimestamp(),
-          [dbPath.usersAclUserAgent(userCredential.user.uid)]: `${(window.navigator) ? window.navigator.userAgent : 'unknown'}`,
+          [DbPath.usersAclLastLogin(userCredential.user.uid)]: modDb.serverTimestamp(),
+          [DbPath.usersAclUserAgent(userCredential.user.uid)]: `${(window.navigator) ? window.navigator.userAgent : 'unknown'}`,
         };
 
-        console.log(update);
         await modDb.update(baseRef, update);
-
         navigateTo('/transcripts');
       })
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.log({ error });
         errorInfo.value = {
           errorCode: error.code,

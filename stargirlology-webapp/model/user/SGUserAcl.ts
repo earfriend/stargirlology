@@ -4,6 +4,7 @@ interface ISGUserAcl {
   userAgent: string;
   lastLogin: number;
 }
+type ACLPermissions = 'ADMIN';
 
 export default class SGUserAcl implements ISGUserAcl {
   public readonly isApproved: boolean;
@@ -26,6 +27,10 @@ export default class SGUserAcl implements ISGUserAcl {
     this.createdAt = createdAt || Date.now();
     this.lastLogin = lastLogin || Date.now();
     this.userAgent = userAgent || 'not set';
+  }
+
+  public isPermitted(permission: ACLPermissions): boolean {
+    return permission === 'ADMIN' && this.isApproved;
   }
 }
 

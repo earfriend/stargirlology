@@ -11,8 +11,8 @@ interface BasicTranscriptRow extends TimeInfo {
   endTime: number;
   transcript: string;
   speakerTag: string;
-  originalUuid: number;
-  uuid: number;
+  originalUuid: string;
+  uuid: string;
   index: number;
   editors: Array<EditorInfo>;
 }

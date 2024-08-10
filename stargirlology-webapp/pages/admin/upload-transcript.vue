@@ -132,7 +132,8 @@ const uploadCsv = () => {
 
       const indexStep = 1000;
       let index = indexStep;
-      let originalUuid = 0;
+      let uuidIndex = 0;
+      let originalUuid = `${epNumber}-${uuidIndex}-0`;
       let uuid = originalUuid;
       r.data.forEach((row) => {
         const prettyRow = {
@@ -153,8 +154,9 @@ const uploadCsv = () => {
         };
         //console.log(newRow);
         index += indexStep;
-        uuid += 1;
-        originalUuid = uuid;
+        uuidIndex += 1;
+        originalUuid = `${epNumber}-${uuidIndex}-0`;
+        uuid = originalUuid;
         transcript.rows.push(newRow);
       });
 
@@ -174,8 +176,6 @@ const uploadCsv = () => {
         modDb.update(modDb.ref(db), update);
 
       });
-
-      console.log(transcript);
     },
   });
 };

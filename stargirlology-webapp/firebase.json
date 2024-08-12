@@ -3,16 +3,18 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "dist/",
+    "public": ".output/public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
+    "trailingSlash": false,
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/200.html",
+        "cleanUrls": true
       }
     ]
   },

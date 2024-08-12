@@ -39,6 +39,19 @@
           placeholder="Email" />
       </div>
 
+      <div class="mb-4">
+        <label class="mb-2 block text-sm font-bold text-gray-700" for="email"> Anti spam - whats the host's FIRST name? (required)</label>
+        <input
+          id="anti-spam"
+          v-model="antiSpam"
+          type="text"
+          :class="{
+            'focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none': true,
+            'border-red-500': errorInfo.errorCode.includes('anti-spam'),
+          }"
+          placeholder="Who's the host of SG? FIRST name only!" />
+      </div>
+
       <div class="mb-0">
         <label class="text-md mb-2 block font-bold text-gray-700" for="comment"> Comment </label>
         <textarea
@@ -71,10 +84,13 @@
 </template>
 
 <script setup lang="ts">
+import GeneralContact from '~/model/message/GeneralContact';
+
 const fb = useFirebase();
 const isCommentSent = ref(false);
 const email = ref('');
 const yourName = ref('');
+const antiSpam = ref('');
 const comment = ref('');
 const errorInfo = ref({ errorCode: '', errorMessage: '' });
 const thankYou = ref<HTMLDivElement | null>(null);
@@ -88,11 +104,7 @@ let isSending = false;
 
 const contact = () => {
   const toc = Date.now();
-  if (toc - tic < 5 * 1000 || isSending) {
-    // eslint-disable-next-line no-console
-    console.log('Too soon to send another comment', { isSending, tic, toc });
-    return;
-  }
+  if (isSending) return;
 
   fb.inClient(async ({ modDb }) => {
     isSending = true;
@@ -111,7 +123,15 @@ const contact = () => {
     const currentPage = document.location.href;
     const ua = window.navigator ? window.navigator.userAgent : 'Unknown';
 
-    if (!emailValue || !emailValue.includes('@')) {
+    if (toc - tic < 5 * 1000) {
+      // eslint-disable-next-line no-console
+      console.log('Too soon to send another comment', { isSending, tic, toc });
+      errorInfoValue.errorCode = 'too-soon';
+      errorInfoValue.errorMessage = 'You tried to submit too soon. Please wait a few seconds.';
+    } else if (!antiSpam.value) {
+      errorInfoValue.errorCode = 'anti-spam';
+      errorInfoValue.errorMessage = 'anti-spam is required';
+    } else if (!emailValue || !emailValue.includes('@')) {
       errorInfoValue.errorCode = 'email';
       errorInfoValue.errorMessage = 'Email is required';
     } else if (!yourNameValue) {
@@ -122,22 +142,25 @@ const contact = () => {
       errorInfoValue.errorMessage = 'Comment is required';
     }
 
+    tic = Date.now();
+
     if (errorInfoValue.errorCode) {
       setTimeout(() => {
         errorInfoValue.errorCode = '';
         errorInfoValue.errorMessage = '';
       }, 5 * 1000);
+      isSending = false;
       return;
     }
 
-    const contactInfo = {
+    const contactInfo = new GeneralContact({
       name: yourNameValue,
       email: emailValue,
       comment: commentValue,
       currentPage,
       ua,
       ...when,
-    };
+    });
 
     // eslint-disable-next-line no-console
     console.log(contactInfo);
@@ -145,7 +168,7 @@ const contact = () => {
     const db = modDb.getDatabase();
     const ref = modDb.ref(db, DbPath.newContact());
     await modDb
-      .push(ref, contactInfo)
+      .push(ref, { ...contactInfo, antiSpam: antiSpam.value.toLowerCase().trim() })
       .then(() => {
         isCommentSent.value = true;
         setTimeout(() => {
@@ -159,7 +182,7 @@ const contact = () => {
       })
       .catch((e) => {
         errorInfoValue.errorCode = 'unknown';
-        errorInfoValue.errorMessage = `${e} - message not sent`;
+        errorInfoValue.errorMessage = `${e} - message not sent - did you put in the correct anti-spam, first name only?`;
       })
       .finally(() => {
         isSending = false;

@@ -5,26 +5,29 @@
 <script setup lang="ts">
 import type { TitledLinkButton } from '~/components/TitledLinkButtons.vue';
 
+const protectedRoutes = useProtectedRoutes();
 const fb = useFirebase();
 const user = fb.fbUser;
 
 const title = 'Admin';
 
-const adminLinkButtons: Array<TitledLinkButton> = [
-  { title: 'Upload Transcript', to: '/admin/upload-transcript' },
-];
+
+const adminLinkButtons: Ref<Array<TitledLinkButton>> = ref([]);
 
 onMounted(() => {
-  //user.value.waitToInitialize().then(() => {
-  if (user.value.isGuest()) {
-    navigateTo('/auth/login');
-    return;
-  }
-  watch(user, (newUser) => {
-    if (newUser.isGuest()) {
-      navigateTo('/auth/login');
+  fb.inClient(() => {
+    protectedRoutes.watchPermission({
+      permission: 'ADMIN_PAGE',
+      user,
+      beforeNavigate: async () => {
+        adminLinkButtons.value = [];
+      },
+    });
+
+    adminLinkButtons.value.push({ title: 'Upload Transcript', to: '/admin/upload-transcript' });
+    if (user.value.acl.isPermitted('ADMIN_CONTACTS')) {
+      adminLinkButtons.value.push({ title: 'Contacts', to: '/admin/contacts' });
     }
   });
-  //});
 });
 </script>

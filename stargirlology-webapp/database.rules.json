@@ -12,6 +12,10 @@
             ".write": "auth != null && auth.uid == $user_id && newData.val() == false",
             ".validate": "newData.isBoolean()"
           },
+          "isAdmin": {
+            ".write": "auth != null && auth.uid == $user_id && newData.val() == false",
+            ".validate": "newData.isBoolean()"
+          },
           "displayName": {
             ".write": "auth != null && auth.uid == $user_id && !data.exists() && !root.child('prod/displayNames/' + newData.val().toLowerCase()).exists()",
             ".validate": "newData.isString() && newData.val().length <= 32 && newData.val().length >= 3 && newData.val().matches(/^[a-zA-Z0-9]+$/)"
@@ -57,10 +61,10 @@
         }
       },
       "contact-request": {
-        ".read": "auth != null && root.child('prod/users/' + auth.uid + '/isApproved').val() == true",
+        ".read": "auth != null && root.child('prod/users/' + auth.uid + '/isAdmin').val() == true",
         ".write": false,
         "$msg": {
-          ".write": "!data.exists() && newData.child('name').exists() && newData.child('email').exists() && newData.child('comment').exists() && newData.child('timestamp').val() == now"
+          ".write": "!data.exists() && newData.child('antiSpam').val() == 'emma' && newData.child('name').exists() && newData.child('email').exists() && newData.child('comment').exists() && newData.child('timestamp').val() == now"
         }
       },
       "contact-transcript-suggestion": {

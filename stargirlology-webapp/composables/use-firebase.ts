@@ -16,7 +16,7 @@ type ClientOnlyFunc = (args: {
 type OutOfClientFunc = () => void | Promise<void>;
 
 let isInitialized = false;
-const fbUser = ref<SGUSer>(SGUSer.newUnInitializedUser());
+const fbUser: Ref<SGUSer> = ref<SGUSer>(SGUSer.newUnInitializedUser());
 const userIsLoggedIn = computed(() => fbUser.value.uid !== '');
 const userIsInitialized = computed(() => !fbUser.value.isUninitialized());
 

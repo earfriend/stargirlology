@@ -129,7 +129,7 @@ const setupUser = (newUser: SGUSer) => {
       { name: 'Transcripts', href: '/transcripts', current: false },
       { name: 'Logout', href: '/auth/logout', current: false },
     ];
-    if (newUser.acl.isPermitted('ADMIN')) {
+    if (newUser.acl.isPermitted('ADMIN_PAGE')) {
       navigation.value.push(
         { name: 'Admin', href: '/admin', current: false }
       );

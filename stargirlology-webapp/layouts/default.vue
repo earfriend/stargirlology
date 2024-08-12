@@ -2,7 +2,7 @@
   <div class="flex flex-col h-screen">
     <TopNav />
 
-    <div class="flex flex-grow md:items-center justify-center bg-n-200">
+    <div class="flex flex-grow justify-center bg-n-200">
       <slot />
     </div>
 

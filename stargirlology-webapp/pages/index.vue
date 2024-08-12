@@ -1,7 +1,25 @@
 <template>
-  <div class="content flex flex-col items-center w-full">
-    <div class="">
-      Future home of STARGIRLology
+  <div class="content flex w-full flex-col items-center">
+    <div
+      :class="{
+        'mt-8 rounded-lg border p-4': true,
+        'border-p-700 bg-p-400': true,
+      }">
+      <p>This is an unofficial fan page of the STARGIRL Podcast hosted by Emma Baker.</p>
+      <p>
+        It is currently under construction, but we do have
+        <NuxtLink
+          to="/transcripts"
+          class="rounded-md border border-p-500 bg-p-200 px-1 hover:bg-p-300"
+          >transcripts!</NuxtLink>
+      </p>
+      <p>
+        Please use the
+        <NuxtLink to="/contact" class="rounded-md border border-p-500 bg-p-200 px-1 hover:bg-p-300"
+          >contact form</NuxtLink
+        >
+        to get in touch with us.
+      </p>
     </div>
   </div>
 </template>
@@ -13,8 +31,4 @@ useSeoMeta({
 });
 </script>
 
-<style scoped>
-.content {
-  border: 1px solid #3de;
-}
-</style>
+<style scoped></style>

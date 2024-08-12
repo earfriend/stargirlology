@@ -90,6 +90,8 @@ const routeSchema = z.object({
 });
 const routeParams = routeSchema.parse(route.params);
 
+console.log('routeParams', JSON.stringify(routeParams)); // eslint-disable-line no-console
+
 fb.inClient(async ({ modDb }) => {
   const db = modDb.getDatabase();
   const ref = modDb.ref(db, DbPath.transcriptBasic(routeParams.id));

@@ -13,6 +13,8 @@
 
 <script setup lang="ts">
 const isDev = import.meta.dev;
+// eslint-disable-next-line no-console
+console.log('isDev', isDev);
 </script>
 
 <style lang="scss" scoped>

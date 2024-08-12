@@ -21,7 +21,7 @@
       </TransitionChild>
 
       <!-- Full-screen scrollable container -->
-      <div class="fixed inset-0 w-screen overflow-y-auto">
+      <div class="fixed inset-0 w-screen overflow-y-auto max-h-[90vh]">
         <!-- Container to center the panel -->
 
         <div class="flex min-h-full items-center justify-center p-4">
@@ -35,7 +35,7 @@
             leave-to="opacity-0 scale-95">
             <DialogPanel
               :class="{
-                'modal-box rounded-xl border-2 bg-opacity-95 p-4 hover:bg-opacity-100': true,
+                'modal-box rounded-xl border-2 bg-opacity-95 p-4 hover:bg-opacity-100 my-8': true,
                 'border-p-900 bg-p-300': true,
               }">
               <DialogTitle class="mb-0 text-2xl font-semibold">

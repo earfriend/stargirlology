@@ -1,8 +1,8 @@
 <template>
-  <div class="content flex flex-col items-center bg-n-800">
-    <NuxtLink to="/transcripts" class="h-6 text-gray-200"> Back to Transcripts </NuxtLink>
+  <div class="content flex flex-col items-center ">
+    <NuxtLink to="/transcripts" class="h-6 text-gray-200 bg-n-800 w-full text-center"> Back to Transcripts </NuxtLink>
 
-    <div v-if="transcript === null">
+    <div v-if="transcript === null" class="max-h-10">
       <h1>Loading...</h1>
     </div>
 
@@ -92,12 +92,32 @@ const routeParams = routeSchema.parse(route.params);
 
 console.log('routeParams', JSON.stringify(routeParams)); // eslint-disable-line no-console
 
+const isNotFound = ref(false);
+watch(isNotFound, (newValue) => {
+  if (!newValue) return;
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Transcript not found',
+    statusText: 'not found',
+    fatal: true,
+  });
+});
+
 fb.inClient(async ({ modDb }) => {
   const db = modDb.getDatabase();
   const ref = modDb.ref(db, DbPath.transcriptBasic(routeParams.id));
   const snap = await modDb.get(ref);
   const val = snap.val() as BasicTranscript | null;
-  if (val === null) return;
+  if (val === null) {
+    isNotFound.value = true;
+    return;
+  }
+
+  useSeoMeta({
+    title: `Stargirlology - Transcipt ${val.episodeNumber} - ${val.episodeTitle}`,
+    description: val.episodeTitle,
+  });
+
   transcript.value = val;
 });
 

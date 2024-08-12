@@ -3,7 +3,7 @@
     <div
       v-if="isCommentSent"
       ref="thankYou"
-      class="h-60 mx-2 mb-4 flex items-center justify-center rounded bg-white px-8 pb-8 pt-6 shadow-md">
+      class="mx-2 mb-4 flex h-60 items-center justify-center rounded bg-white px-8 pb-8 pt-6 shadow-md">
       <p>Thank you for your comment, {{ yourName }}! We will get back to you at {{ email }}.</p>
     </div>
 
@@ -40,7 +40,9 @@
       </div>
 
       <div class="mb-4">
-        <label class="mb-2 block text-sm font-bold text-gray-700" for="email"> Anti spam - whats the host's FIRST name? (required)</label>
+        <label class="mb-2 block text-sm font-bold text-gray-700" for="email">
+          Anti spam - whats the host's FIRST name? (required)</label
+        >
         <input
           id="anti-spam"
           v-model="antiSpam"
@@ -71,13 +73,7 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <button
-          :class="{
-            'focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none': true,
-          }"
-          type="submit">
-          Send
-        </button>
+        <ActionButton type="submit"> Send </ActionButton>
       </div>
     </form>
   </div>

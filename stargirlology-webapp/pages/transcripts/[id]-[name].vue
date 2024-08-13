@@ -119,7 +119,7 @@ if (data.value === null) {
 } else {
   transcript.value = data.value as BasicTranscript;
   useSeoMeta({
-    title: `Stargirlology - Transcipt ${transcript.value.episodeNumber} - ${transcript.value.episodeTitle}`,
+    title: `Episode ${transcript.value.episodeNumber}: ${transcript.value.episodeTitle} - transcript`,
     description: transcript.value.episodeTitle,
   });
 }

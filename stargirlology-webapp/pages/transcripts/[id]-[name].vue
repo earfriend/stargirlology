@@ -17,7 +17,10 @@
         <div
           class="grid grid-cols-12 hover:cursor-pointer hover:bg-violet-50"
           @click="onEditRow(row)">
-          <p class="col-span-2 mb-1 bg-p-100 p-1">{{ row.startTime }}-{{ row.endTime }}s</p>
+          <p
+            :name="`{{ row.startTime }}-{{ row.endTime }}s`"
+            class="col-span-2 mb-1 bg-p-100 p-1">{{ row.startTime }}-{{ row.endTime }}s
+          </p>
           <p class="col-span-10 mb-1 bg-p-100 p-1 text-p-800">{{ row.transcript }}</p>
         </div>
       </template>
@@ -90,8 +93,6 @@ const routeSchema = z.object({
 });
 const routeParams = routeSchema.parse(route.params);
 
-console.log('routeParams', JSON.stringify(routeParams)); // eslint-disable-line no-console
-
 const isNotFound = ref(false);
 watch(isNotFound, (newValue) => {
   if (!newValue) return;
@@ -103,23 +104,25 @@ watch(isNotFound, (newValue) => {
   });
 });
 
-fb.inClient(async ({ modDb }) => {
-  const db = modDb.getDatabase();
-  const ref = modDb.ref(db, DbPath.transcriptBasic(routeParams.id));
-  const snap = await modDb.get(ref);
-  const val = snap.val() as BasicTranscript | null;
-  if (val === null) {
-    isNotFound.value = true;
-    return;
-  }
-
-  useSeoMeta({
-    title: `Stargirlology - Transcipt ${val.episodeNumber} - ${val.episodeTitle}`,
-    description: val.episodeTitle,
-  });
-
-  transcript.value = val;
+const { data } = await fb.snapData({
+  keyName: `transcript-basic-${routeParams.id}`,
+  snapBuilder: async (modDb) => {
+    const db = modDb.getDatabase();
+    const ref = modDb.ref(db, DbPath.transcriptBasic(routeParams.id));
+    const snap = await modDb.get(ref);
+    return snap;
+  },
 });
+
+if (data.value === null) {
+  isNotFound.value = true;
+} else {
+  transcript.value = data.value as BasicTranscript;
+  useSeoMeta({
+    title: `Stargirlology - Transcipt ${transcript.value.episodeNumber} - ${transcript.value.episodeTitle}`,
+    description: transcript.value.episodeTitle,
+  });
+}
 
 const setIsOpen = (value: boolean) => {
   isOpen.value = value;

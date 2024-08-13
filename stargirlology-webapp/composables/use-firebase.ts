@@ -8,9 +8,12 @@ import * as modDb from 'firebase/database';
 import SGUSer from '~/model/user/SGUser';
 import SGUserAcl from '~/model/user/SGUserAcl';
 
+type ModDb = typeof modDb;
+type ModAuth = typeof modAuth;
+
 type ClientOnlyFunc = (args: {
-  modAuth: typeof modAuth;
-  modDb: typeof modDb;
+  modAuth: ModAuth;
+  modDb: ModDb;
 }) => void | Promise<void>;
 
 type OutOfClientFunc = () => void | Promise<void>;
@@ -68,7 +71,7 @@ const setupUser = () => {
 
 const setupFirebase = async () => {
   // eslint-disable-next-line no-console
-  console.log('Setting up Firebase');
+  console.log('Setting up Firebase', (import.meta.prerender) ? 'prerender' : 'client');
 
   const firebaseConfig = {
     apiKey: 'AIzaSyCIooYtFaWQ_li4P0WvhNwxb5BXpy5g9W0',
@@ -89,7 +92,7 @@ const setupFirebase = async () => {
 
   const db = getDatabase();
   const auth = getAuth(app);
-  if (location && location.hostname === 'localhost') {
+  if (location && location.hostname === 'localhost' && !import.meta.prerender) {
     // eslint-disable-next-line no-console
     console.log('Running db on localhost');
     // Point to the RTDB emulator running on localhost.
@@ -130,18 +133,52 @@ const outOfClient = async (func: OutOfClientFunc): Promise<void> => {
   return await func();
 };
 
+
+const snapData = async ({
+  keyName,
+  snapBuilder,
+}: {
+  keyName: string,
+  snapBuilder: (modDb: ModDb) => Promise<modDb.DataSnapshot | null>;
+}) => {
+  const result = await useAsyncData(keyName, async () => {
+    const snap = await snapBuilder(modDb);
+    if (snap === null) return snap;
+    const val = snap.val();
+    return val;
+  },
+  {
+    server: true,
+    deep: false,
+  });
+
+  return result;
+};
+
+
 export default function () {
 
   // Setup the firebase if we are in the client and it has not been setup
-  if (!isInitialized && window) {
+  if (!isInitialized ) {
     isInitialized = true;
     setupFirebase();
+
+    // build a handle to close the db after prerendering
+    if (import.meta.prerender) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).setDbToOffline = () => {
+        // eslint-disable-next-line no-console
+        console.log('Setting db to offline');
+        modDb.goOffline(getDatabase());
+      };
+    }
   }
 
   return {
     inClient,
     outOfClient,
     fbUser,
+    snapData,
   };
 }
 

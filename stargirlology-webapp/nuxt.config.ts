@@ -1,9 +1,4 @@
-const ownModuleKeys = [
-  'firebase/analytics',
-  'firebase/database',
-  'firebase/auth',
-  'papaparse',
-];
+const ownModuleKeys = ['firebase/analytics', 'firebase/database', 'firebase/auth', 'papaparse'];
 
 const isDebugModulesList = false;
 
@@ -15,11 +10,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   ssr: true,
-  modules: [
-    '@pinia/nuxt',
-    '@nuxtjs/tailwindcss',
-    '@nuxt/eslint',
-  ],
+  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@nuxt/eslint'],
   eslint: {
     config: {
       stylistic: true,
@@ -49,6 +40,14 @@ export default defineNuxtConfig({
             return seprateModule;
           },
         },
+      },
+    },
+  },
+  nitro: {
+    hooks: {
+      'prerender:done'() {
+        // defined in use-firebase, used to close the db after prerendering
+        (globalThis as any).setDbToOffline(); // eslint-disable-line @typescript-eslint/no-explicit-any
       },
     },
   },

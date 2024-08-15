@@ -17,7 +17,7 @@ const transcriptLinkButtons = ref<Array<TitledLinkButton>>([]);
 const title = 'Transcripts';
 
 useSeoMeta({
-  title: 'Stargirlology',
+  title: 'STARGIRLPod Transcripts (unofficial)',
   description: 'Stargirl Transcripts',
 });
 

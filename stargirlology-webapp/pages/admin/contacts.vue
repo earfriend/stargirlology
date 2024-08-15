@@ -39,8 +39,12 @@ import GeneralContact from '~/model/message/GeneralContact';
 const fb = useFirebase();
 const user = fb.fbUser;
 const protectedRoutes = useProtectedRoutes();
-
 const contacts = ref<Array<GeneralContact>>([]);
+
+useSeoMeta({
+  title: 'Admin Contact requests',
+  description: 'Contact messages from the Stargirlology website',
+});
 
 onMounted(() => {
   console.log('Contacts page mounted');

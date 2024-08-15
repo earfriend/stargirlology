@@ -91,6 +91,11 @@ const comment = ref('');
 const errorInfo = ref({ errorCode: '', errorMessage: '' });
 const thankYou = ref<HTMLDivElement | null>(null);
 
+useSeoMeta({
+  title: 'Contact Stargirlology',
+  description: 'Contact the Stargirlology team',
+});
+
 let tic = 0;
 onMounted(() => {
   tic = Date.now();

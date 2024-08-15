@@ -67,6 +67,11 @@ const speaker1 = ref<string>('Emma');
 const speaker2 = ref<string>('');
 const episodeTitle = ref<string>('');
 
+useSeoMeta({
+  title: 'Admin - Upload Transcript',
+  description: 'Upload a transcript',
+});
+
 const onFileChange = (file: File) => {
   csvFile.value = file;
   fileName.value = file.name;

@@ -119,7 +119,7 @@ if (data.value === null) {
 } else {
   transcript.value = data.value as BasicTranscript;
   useSeoMeta({
-    title: `Episode ${transcript.value.episodeNumber}: ${transcript.value.episodeTitle} - transcript`,
+    title: `Episode ${transcript.value.episodeNumber}: ${transcript.value.episodeTitle} - transcript (unofficial)`,
     description: transcript.value.episodeTitle,
   });
 }

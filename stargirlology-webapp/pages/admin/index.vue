@@ -8,11 +8,13 @@ import type { TitledLinkButton } from '~/components/TitledLinkButtons.vue';
 const protectedRoutes = useProtectedRoutes();
 const fb = useFirebase();
 const user = fb.fbUser;
-
 const title = 'Admin';
-
-
 const adminLinkButtons: Ref<Array<TitledLinkButton>> = ref([]);
+
+useSeoMeta({
+  title: 'Admin',
+  description: 'Admin page',
+});
 
 onMounted(() => {
   fb.inClient(() => {

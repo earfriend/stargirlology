@@ -19,3 +19,10 @@
     </ul>
   </div>
 </template>
+
+<script setup lang="ts">
+useSeoMeta({
+  title: 'Acknowledgements',
+  description: 'Acknowledgements for the Stargirlology website',
+});
+</script>

@@ -126,6 +126,7 @@ const setupUser = (newUser: SGUSer) => {
   if (newUser.isNotGuest()) {
     navigation.value = [
       { name: 'Stargirlology', href: '/', current: false },
+      { name: 'Paradigms', href: '/paradigms', current: false },
       { name: 'Transcripts', href: '/transcripts', current: false },
     ];
     if (newUser.acl.isPermitted('ADMIN_PAGE')) {
@@ -138,6 +139,7 @@ const setupUser = (newUser: SGUSer) => {
     navigation.value = [
       { name: 'Stargirlology', href: '/', current: false },
       { name: 'Transcripts', href: '/transcripts', current: false },
+      { name: 'Paradigms', href: '/paradigms', current: false },
       { name: 'Login', href: '/auth/login', current: false },
       { name: 'Signup', href: '/auth/signup', current: false },
     ];
